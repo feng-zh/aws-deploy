@@ -1,0 +1,15 @@
+---
+key_name: "{{ vault_key_name }}"
+key_public_file: security/id_rsa.pub
+aws_region: us-east-1
+ami_id: ami-14c5486b
+instance_type: t2.micro
+wait_ec2_instance: true
+
+aws_access_key: "{{ vault_aws_access_key }}"
+aws_secret_key: "{{ vault_aws_secret_key }}"
+
+aws_env:
+  AWS_ACCESS_KEY_ID: "{{aws_access_key}}"
+  AWS_SECRET_ACCESS_KEY: "{{aws_secret_key}}"
+  AWS_REGION: "{{aws_region}}"

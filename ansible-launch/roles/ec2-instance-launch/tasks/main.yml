@@ -1,0 +1,51 @@
+---
+
+- name: Ensure security group
+  ec2_group:
+    name: default
+    description: "default VPC security group"
+    rules:
+      - proto: tcp
+        ports:
+          - 22
+          - 80
+          - 443
+        cidr_ip: 0.0.0.0/0
+    rules_egress:
+      - proto: all
+        cidr_ip: 0.0.0.0/0
+
+- name: Ensure ec2 key pair
+  ec2_key:
+    name: "{{ key_name }}"
+    key_material: "{{ lookup('file', key_public_file) }}"
+    state: present
+    wait: true
+
+- name: Get vpc subnet id
+  ec2_vpc_subnet_facts:
+  register: subnet_facts
+
+- name: Launch ec2 instance
+  ec2:
+    key_name: "{{ key_name }}"
+    instance_type: "{{ instance_type }}"
+    image: "{{ ami_id }}"
+    assign_public_ip: yes
+    group: default
+    vpc_subnet_id: "{{ subnet_facts.subnets[0].id }}"
+    volumes:
+      - device_name: /dev/xvda
+        volume_type: gp2
+        volume_size: 10
+        delete_on_termination: true
+    user_data: |
+      #!/bin/bash
+      echo "hello" > /root/world
+    wait: "{{ wait_ec2_instance }}"
+  register: ec2
+
+- name: Display instance public dns
+  debug:
+    msg: "Instance is {{ ec2.instances[0].state }} at {{ ec2.instances[0].public_dns_name }} with IP {{ ec2.instances[0].public_ip }}"
+  when: ec2.instances[0] is defined
