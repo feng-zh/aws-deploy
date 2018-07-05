@@ -11,6 +11,15 @@
           - 80
           - 443
         cidr_ip: 0.0.0.0/0
+      - proto: udp
+        ports:
+          - 500
+          - 4500
+        cidr_ip: 0.0.0.0/0
+      - proto: icmp
+        from_port: 8
+        to_port: -1
+        cidr_ip: 0.0.0.0/0
     rules_egress:
       - proto: all
         cidr_ip: 0.0.0.0/0
@@ -39,9 +48,7 @@
         volume_type: gp2
         volume_size: 10
         delete_on_termination: true
-    user_data: |
-      #!/bin/bash
-      echo "hello" > /root/world
+    user_data: "{{ lookup('template', 'user-data.j2') | b64encode }}"
     wait: "{{ wait_ec2_instance }}"
   register: ec2
 

@@ -2,7 +2,7 @@
 
 ---
 - hosts: local
-  gather_facts: false
+  gather_facts: true
   roles:
     - ec2-instance-launch
   environment: "{{aws_env}}"

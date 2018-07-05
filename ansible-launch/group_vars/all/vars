@@ -6,6 +6,13 @@ ami_id: ami-14c5486b
 instance_type: t2.micro
 wait_ec2_instance: true
 
+ec2_userdata_remote: true
+ec2_vpn_psk: "{{ vault_ec2_vpn_psk }}"
+ec2_vpn_user: "{{ vault_ec2_vpn_user }}"
+ec2_vpn_password: "{{ vault_ec2_vpn_password }}"
+
+ec2_ansible_vault_password: "{{ vault_ec2_ansible_vault_password }}"
+
 aws_access_key: "{{ vault_aws_access_key }}"
 aws_secret_key: "{{ vault_aws_secret_key }}"
 

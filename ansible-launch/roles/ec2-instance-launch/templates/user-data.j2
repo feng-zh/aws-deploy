@@ -1,0 +1,80 @@
+From {{ ansible_user_id }} {{ ansible_date_time.iso8601 }}
+Content-Type: multipart/mixed; boundary="===============4019255470322715444=="
+MIME-Version: 1.0
+
+--===============4019255470322715444==
+MIME-Version: 1.0
+Content-Type: text/cloud-config; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="user-data"
+
+#cloud-config
+
+bootcmd:
+  - yum-config-manager --enable epel
+
+write_files:
+  - content: {{ ec2_ansible_vault_password | b64encode }}
+    encoding: b64
+    path: /opt/ops/ansbile-vault-file
+    permissions: '0400'
+    owner: root:root
+
+package_update: true
+package_upgrade: true
+repo_upgrade: all
+
+packages:
+  - git
+  - ansible
+  - screen
+  - docker
+
+package_reboot_if_required: true
+
+--===============4019255470322715444==
+MIME-Version: 1.0
+Content-Type: text/cloud-config; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="vpn-data"
+
+#cloud-config
+
+bootcmd:
+  - [ modprobe, af_key ]
+
+write_files:
+  - content: |
+      #!/bin/sh
+      exec /sbin/modprobe af_key >/dev/null 2>&1
+    path: /etc/sysconfig/modules/vpn.modules
+    permissions: '0755'
+    owner: root:root
+  - content: |
+      VPN_IPSEC_PSK={{ ec2_vpn_psk }}
+      VPN_USER={{ ec2_vpn_user }}
+      VPN_PASSWORD={{ ec2_vpn_password }}
+    path: /opt/ops/vpn.env
+    permissions: '0666'
+
+merge_type: 'list(append)+dict(recurse_array)+str()'
+
+--===============4019255470322715444==
+{% if ec2_userdata_remote | bool %}
+MIME-Version: 1.0
+Content-Type: text/x-include-url; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="include-data"
+
+{% include './files/include-data-remote' %}
+
+{% else %}
+MIME-Version: 1.0
+Content-Type: text/x-shellscript; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="include-data.sh"
+
+{% include './files/setup.sh' %}
+
+{% endif %}
+--===============4019255470322715444==--
