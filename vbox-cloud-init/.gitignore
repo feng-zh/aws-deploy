@@ -1,0 +1,5 @@
+*.iso
+*.qcow2.xz
+*.qcow2
+*.vmdk
+*.vdi
