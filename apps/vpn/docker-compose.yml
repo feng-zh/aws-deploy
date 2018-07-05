@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+
+  vpn:
+    image: hwdsl2/ipsec-vpn-server
+    container_name: vpn
+    restart: unless-stopped
+    env_file:
+      - /opt/ops/vpn.env
+    privileged: true
+    ports:
+      - 500:500/udp
+      - 4500:4500/udp
+    volumes:
+      - /lib/modules:/lib/modules:ro

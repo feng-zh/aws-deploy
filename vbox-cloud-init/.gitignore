@@ -3,3 +3,5 @@
 *.qcow2
 *.vmdk
 *.vdi
+
+/centos-cloud/

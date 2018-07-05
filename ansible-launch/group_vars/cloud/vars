@@ -1,0 +1,4 @@
+---
+dnspod_token: "{{ vault_dnspod_token }}"
+domain: "{{ vault_domain }}"
+slack_token: "{{ vault_slack_token }}"

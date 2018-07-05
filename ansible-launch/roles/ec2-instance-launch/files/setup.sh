@@ -2,10 +2,8 @@
 
 service docker start
 
-docker run --name ipsec-vpn-server \
-           --env-file /opt/ops/vpn.env \
-           --restart=always \
-           -p 500:500/udp -p 4500:4500/udp \
-           -v /lib/modules:/lib/modules:ro \
-           -d --privileged \
-           hwdsl2/ipsec-vpn-server
+git clone https://github.com/feng-zh/aws-deploy.git /opt/ops/aws-deploy
+
+cd /opt/ops/aws-deploy/ansible-launch
+
+ansible-playbook playbooks/cloud-start.yml --vault-password-file=/opt/ops/.vault-password

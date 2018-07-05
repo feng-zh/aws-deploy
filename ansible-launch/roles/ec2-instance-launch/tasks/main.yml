@@ -44,11 +44,11 @@
     group: default
     vpc_subnet_id: "{{ subnet_facts.subnets[0].id }}"
     volumes:
-      - device_name: /dev/xvda
+      - device_name: /dev/sda1
         volume_type: gp2
         volume_size: 10
         delete_on_termination: true
-    user_data: "{{ lookup('template', 'user-data.j2') | b64encode }}"
+    user_data: "{{ lookup('template', 'user-data.j2') }}"
     wait: "{{ wait_ec2_instance }}"
   register: ec2
 

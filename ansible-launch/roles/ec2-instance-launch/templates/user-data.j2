@@ -10,13 +10,10 @@ Content-Disposition: attachment; filename="user-data"
 
 #cloud-config
 
-bootcmd:
-  - yum-config-manager --enable epel
-
 write_files:
   - content: {{ ec2_ansible_vault_password | b64encode }}
     encoding: b64
-    path: /opt/ops/.vault-password
+    path: {{ root_dir }}/.vault-password
     permissions: '0400'
     owner: root:root
 
@@ -25,12 +22,16 @@ package_upgrade: true
 repo_upgrade: all
 
 packages:
+  - epel-release
   - git
   - ansible
   - screen
   - docker
 
 package_reboot_if_required: true
+
+bootcmd:
+  - yum-config-manager --enable epel
 
 --===============4019255470322715444==
 MIME-Version: 1.0
@@ -54,7 +55,7 @@ write_files:
       VPN_IPSEC_PSK={{ ec2_vpn_psk }}
       VPN_USER={{ ec2_vpn_user }}
       VPN_PASSWORD={{ ec2_vpn_password }}
-    path: /opt/ops/vpn.env
+    path: {{ root_dir }}/vpn.env
     permissions: '0666'
 
 merge_type: 'list(append)+dict(recurse_array)+str()'
