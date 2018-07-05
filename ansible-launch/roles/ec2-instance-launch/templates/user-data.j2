@@ -16,7 +16,7 @@ bootcmd:
 write_files:
   - content: {{ ec2_ansible_vault_password | b64encode }}
     encoding: b64
-    path: /opt/ops/ansbile-vault-file
+    path: /opt/ops/.vault-password
     permissions: '0400'
     owner: root:root
 
