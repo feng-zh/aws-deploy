@@ -55,4 +55,7 @@
 - name: Display instance public dns
   debug:
     msg: "Instance is {{ ec2.instances[0].state }} at {{ ec2.instances[0].public_dns_name }} with IP {{ ec2.instances[0].public_ip }}"
-  when: ec2.instances[0] is defined
+  when:
+    - echo_ec2_ip
+    - ec2 is defined
+    - ec2.instances[0] is defined
