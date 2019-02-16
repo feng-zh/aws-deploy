@@ -2,6 +2,7 @@
 
 yum upgrade -y
 
+chkconfig docker on
 service docker start
 
 git clone https://github.com/feng-zh/aws-deploy.git /opt/ops/aws-deploy
