@@ -1,1 +1,0 @@
-web: java $JAVA_OPTS -jar ./cloud-service/target/cloud-service-all.jar
