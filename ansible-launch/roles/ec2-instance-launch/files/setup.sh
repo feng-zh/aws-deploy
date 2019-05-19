@@ -5,8 +5,12 @@ yum upgrade -y
 chkconfig docker on
 service docker start
 
-git clone https://github.com/feng-zh/aws-deploy.git /opt/ops/aws-deploy
+su - ops << EOF
 
-cd /opt/ops/aws-deploy/ansible-launch
+git clone https://github.com/feng-zh/aws-deploy.git 
 
-ansible-playbook playbooks/cloud-start.yml --vault-password-file=/opt/ops/.vault-password
+cd aws-deploy/ansible-launch
+
+ansible-playbook playbooks/cloud-start.yml --vault-password-file=~/.vault-password
+
+EOF

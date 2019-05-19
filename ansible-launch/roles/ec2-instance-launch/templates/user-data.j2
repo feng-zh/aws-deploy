@@ -33,6 +33,19 @@ package_reboot_if_required: true
 bootcmd:
   - yum-config-manager --enable epel
   - "test -x /usr/bin/amazon-linux-extras && /usr/bin/amazon-linux-extras install -y epel ansible2"
+  - setenforce 0
+  - sed -i 's/=enforcing/=disabled/g' /etc/selinux/config
+
+users:
+  - default
+  - name: ops
+    homedir: {{ root_dir }}
+    lock_passwd: true
+    gecos: Ops User
+    groups: [wheel, adm, systemd-journal]
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh_authorized_keys:
+      - {{ lookup(key_public_uri_type, key_public_uri) }}
 
 --===============4019255470322715444==
 MIME-Version: 1.0
@@ -65,9 +78,12 @@ merge_type: 'list(append)+dict(recurse_array)+str()'
 MIME-Version: 1.0
 Content-Type: text/x-shellscript; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename="bbr-install.sh"
+Content-Disposition: attachment; filename="05-post-install.sh"
 
 {% include './files/bbr-install.sh' %}
+
+grep -q docker: /etc/group && usermod -a -G docker ops
+chown -R ops: {{ root_dir }}
 
 --===============4019255470322715444==
 {% if ec2_userdata_remote | bool %}
