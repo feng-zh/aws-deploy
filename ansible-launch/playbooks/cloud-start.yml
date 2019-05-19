@@ -24,6 +24,7 @@
         state: present
       with_items:
         - vpn
+        - nginx
     - name: Update VPN Domain
       import_role:
         name: dnspod-myip
