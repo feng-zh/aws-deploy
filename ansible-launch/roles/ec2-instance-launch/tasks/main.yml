@@ -28,7 +28,7 @@
 - name: Ensure ec2 key pair
   ec2_key:
     name: "{{ key_name }}"
-    key_material: "{{ lookup('file', key_public_file) }}"
+    key_material: "{{ lookup(key_public_uri_type, key_public_uri) }}"
     state: present
     wait: true
 
@@ -45,7 +45,7 @@
     group: default
     vpc_subnet_id: "{{ subnet_facts.subnets[0].id }}"
     volumes:
-      - device_name: /dev/sda1
+      - device_name: "{{ ami_volume_device }}"
         volume_type: gp2
         volume_size: 10
         delete_on_termination: true

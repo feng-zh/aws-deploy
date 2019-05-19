@@ -32,6 +32,7 @@ package_reboot_if_required: true
 
 bootcmd:
   - yum-config-manager --enable epel
+  - "test -x /usr/bin/amazon-linux-extras && /usr/bin/amazon-linux-extras install -y epel ansible2"
 
 --===============4019255470322715444==
 MIME-Version: 1.0
@@ -59,6 +60,14 @@ write_files:
     permissions: '0666'
 
 merge_type: 'list(append)+dict(recurse_array)+str()'
+
+--===============4019255470322715444==
+MIME-Version: 1.0
+Content-Type: text/x-shellscript; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="bbr-install.sh"
+
+{% include './files/bbr-install.sh' %}
 
 --===============4019255470322715444==
 {% if ec2_userdata_remote | bool %}

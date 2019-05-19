@@ -1,13 +1,17 @@
 ---
 key_name: "{{ vault_key_name }}"
-key_public_file: security/id_rsa.pub
+key_public_uri: "{{ vault_key_public_uri }}"
+key_public_uri_type: "{{ vault_key_public_uri_type }}"
 aws_region: ap-northeast-1
-ami_id: ami-8e8847f1
+# ami_id: ami-8e8847f1
+# ami_volume_device: /dev/sda1
+ami_id: ami-00d101850e971728d
+ami_volume_device: /dev/xvda
 instance_type: t2.micro
 wait_ec2_instance: true
 echo_ec2_ip: true
 
-ec2_userdata_remote: true
+ec2_userdata_remote: false
 ec2_vpn_psk: "{{ vault_ec2_vpn_psk }}"
 ec2_vpn_user: "{{ vault_ec2_vpn_user }}"
 ec2_vpn_password: "{{ vault_ec2_vpn_password }}"
