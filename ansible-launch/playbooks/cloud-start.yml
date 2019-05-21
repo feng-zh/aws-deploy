@@ -25,6 +25,7 @@
       with_items:
         - vpn
         - nginx
+        - v2ray
     - name: Update VPN Domain
       import_role:
         name: dnspod-myip

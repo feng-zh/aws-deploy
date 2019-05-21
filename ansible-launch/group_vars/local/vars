@@ -15,6 +15,8 @@ ec2_userdata_remote: false
 ec2_vpn_psk: "{{ vault_ec2_vpn_psk }}"
 ec2_vpn_user: "{{ vault_ec2_vpn_user }}"
 ec2_vpn_password: "{{ vault_ec2_vpn_password }}"
+ec2_v2ray_port: "{{ vault_ec2_v2ray_port }}"
+ec2_v2ray_client_id: "{{ vault_ec2_v2ray_client_id }}"
 
 ec2_ansible_vault_password: "{{ vault_ec2_ansible_vault_password }}"
 

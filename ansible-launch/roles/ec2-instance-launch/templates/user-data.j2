@@ -71,6 +71,13 @@ write_files:
       VPN_PASSWORD={{ ec2_vpn_password }}
     path: {{ root_dir }}/vpn.env
     permissions: '0666'
+  - content: |
+      V2RAY_PORT={{ ec2_v2ray_port }}
+      V2RAY_CLIENT_ID={{ ec2_v2ray_client_id }}
+    path: {{ root_dir }}/v2ray.env
+    permissions: '0666'
+
+merge_type: 'list(append)+dict(recurse_array)+str()'
 
 merge_type: 'list(append)+dict(recurse_array)+str()'
 

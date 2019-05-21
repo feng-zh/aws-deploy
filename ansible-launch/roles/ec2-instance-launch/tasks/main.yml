@@ -10,6 +10,7 @@
           - 22
           - 80
           - 443
+          - "{{ ec2_v2ray_port }}"
         cidr_ip: 0.0.0.0/0
       - proto: udp
         ports:
