@@ -12,5 +12,5 @@ action "ansible-vars" {
 action "ansible" {
   needs = ["ansible-vars"]
   uses = "docker://williamyeh/ansible:alpine3"
-  args = ["sh", "-c", "pip install boto; pip install boto3; ansible-playbook playbooks.yml -e @.extra_vars"]
+  args = ["sh", "-c", "pip install boto; pip install boto3; ansible-playbook playbook.yml -e @.extra_vars"]
 }
