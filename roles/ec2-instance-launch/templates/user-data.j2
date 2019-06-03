@@ -1,0 +1,116 @@
+From {{ ansible_user_id }} {{ ansible_date_time.iso8601 }}
+Content-Type: multipart/mixed; boundary="===============4019255470322715444=="
+MIME-Version: 1.0
+
+--===============4019255470322715444==
+MIME-Version: 1.0
+Content-Type: text/cloud-config; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="user-data"
+
+#cloud-config
+
+write_files:
+  - content: {{ cloud_env | b64encode }}
+    encoding: b64
+    path: {{ cloud_home }}/.env
+    permissions: '0400'
+    owner: root:root
+  - content: |
+      #!/bin/sh
+      exec /sbin/modprobe af_key >/dev/null 2>&1
+    path: /etc/sysconfig/modules/user.modules
+    permissions: '0755'
+    owner: root:root
+
+package_update: true
+package_upgrade: true
+repo_upgrade: all
+
+packages:
+  - epel-release
+  - git
+  - ansible
+  - screen
+  - docker
+
+package_reboot_if_required: true
+
+bootcmd:
+  - yum-config-manager --enable epel
+  - "test -x /usr/bin/amazon-linux-extras && /usr/bin/amazon-linux-extras install -y epel ansible2"
+  - setenforce 0
+  - sed -i 's/=enforcing/=disabled/g' /etc/selinux/config
+  - [ modprobe, af_key ]
+
+users:
+  - default
+  - name: {{ cloud_user }}
+    homedir: {{ cloud_home }}
+    lock_passwd: true
+    gecos: Clould User
+    groups: [wheel, adm, systemd-journal]
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh_authorized_keys:
+      - {{ lookup(ec2_key_public_uri_type, ec2_key_public_uri) }}
+
+--===============4019255470322715444==
+MIME-Version: 1.0
+Content-Type: text/x-shellscript; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="05-post-install.sh"
+
+{% include './files/bbr-install.sh' %}
+
+chkconfig docker on
+service docker start
+grep -q docker: /etc/group && usermod -a -G docker {{ cloud_user }}
+chown -R {{ cloud_user }}: {{ cloud_home }}
+
+--===============4019255470322715444==
+{% if cloud_apps_source_type == "url" %}
+MIME-Version: 1.0
+Content-Type: text/x-include-url; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="99-cloud-apps-url"
+
+#include
+{{ cloud_apps_source }}
+
+--===============4019255470322715444==--
+{% elif cloud_apps_source_type == "git" %}
+MIME-Version: 1.0
+Content-Type: text/x-shellscript; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="cloud-apps-git.sh"
+
+
+su - {{ cloud_user }} <<EOF
+
+test -r .env && source .env
+
+git clone {{ cloud_apps_source }} apps
+
+cd apps
+
+test -r .runs && source .runs
+
+EOF
+
+--===============4019255470322715444==--
+{% elif cloud_apps_source_type == "shell" %}
+MIME-Version: 1.0
+Content-Type: text/x-shellscript; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="cloud-apps-shell.sh"
+
+
+su - {{ cloud_user }} <<"EOF"
+
+test -r .env && source .env
+
+{{ cloud_apps_source }}
+
+EOF
+--===============4019255470322715444==--
+{% endif %}

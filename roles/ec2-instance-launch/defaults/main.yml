@@ -1,0 +1,23 @@
+---
+cloud_home: /opt/cloud
+cloud_user: cloud
+cloud_env: ""
+
+ec2_key_name: cloud_key
+ec2_key_public_uri_type: url
+ec2_group: default
+
+ec2_tcp_ports:
+  - 22
+  - 80
+  - 443
+
+ec2_udp_ports:
+  - 500
+  - 4500
+  
+ec2_instance_type: t2.micro
+ec2_instance_volume_device: /dev/xvda
+ec2_instance_volume_size: 10
+ec2_wait_instance: true
+ec2_echo_ip: true

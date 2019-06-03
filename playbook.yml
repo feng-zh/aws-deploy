@@ -1,0 +1,25 @@
+#!/usr/bin/env ansible-playbook
+
+---
+- hosts: local
+  gather_facts: true
+  pre_tasks:
+    - name: "Check mandatory variables are defined"
+      assert:
+        that: 
+          - vars[item] is defined
+          - vars[item] is not none
+          - vars[item] != ""
+      with_items:
+        - aws_access_key
+        - aws_secret_key
+        - aws_region
+        - ec2_ami_id
+        - ec2_key_public_uri
+  roles:
+    - ec2-instance-launch
+  environment:
+    AWS_ACCESS_KEY_ID: "{{aws_access_key | mandatory }}"
+    AWS_SECRET_ACCESS_KEY: "{{aws_secret_key | mandatory }}"
+    AWS_REGION: "{{aws_region | mandatory }}"
+

@@ -1,8 +1,0 @@
-#!/usr/bin/env ansible-playbook
-
----
-- hosts: local
-  gather_facts: true
-  roles:
-    - ec2-instance-launch
-  environment: "{{aws_env}}"

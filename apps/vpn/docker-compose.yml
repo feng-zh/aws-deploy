@@ -7,7 +7,7 @@ services:
     container_name: vpn
     restart: unless-stopped
     env_file:
-      - ../../../vpn.env
+      - ../../../.env 
     privileged: true
     ports:
       - 500:500/udp

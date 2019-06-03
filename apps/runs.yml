@@ -1,0 +1,26 @@
+#!/usr/bin/env ansible-playbook
+
+---
+- hosts: localhost
+  gather_facts: true
+  become: true
+  pre_tasks:
+    - name: Ensure packages installed
+      yum:
+        name: "{{ item }}"
+      with_items:
+        - python2-pip
+        - docker-compose
+    - name: Ensure pip packages installed
+      pip:
+        name: "{{ item }}"
+      with_items:
+        - docker
+        - docker-compose
+  tasks:
+    - name: Ensure App Started
+      docker_service:
+        project_src: "{{ item }}"
+        state: present
+      with_items:
+        - vpn

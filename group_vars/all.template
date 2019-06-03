@@ -1,0 +1,15 @@
+---
+# aws_access_key: VALUE_OF_AWS_ACCESS_KEY
+# aws_secret_key: VALUE_OF_AWS_SECRET_KEY
+# aws_region: ap-northeast-1
+# ec2_ami_id: ami-00d101850e971728d
+# ec2_key_public_uri: https://github.com/name_of_user.keys
+# cloud_apps_source_type: shell
+# cloud_apps_source: |
+#   git clone https://github.com/feng-zh/aws-deploy.git
+#   cd aws-deploy
+#   ansible-playbook apps/runs.yml
+# cloud_env: |
+#   VPN_IPSEC_PSK=vpn_psk
+#   VPN_USER=vpn_user
+#   VPN_PASSWORD=vpn_password

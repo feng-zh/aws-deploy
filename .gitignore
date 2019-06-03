@@ -1,5 +1,6 @@
-.idea/
-*.iws
-out/
-*.iml
-target/
+*.retry
+/.imported_roles/
+/group_vars/*
+!/group_vars/all.template
+/.extra-vars
+/vbox-cloud-init

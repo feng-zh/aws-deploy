@@ -2,21 +2,14 @@
 
 - name: Ensure security group
   ec2_group:
-    name: default
-    description: "default VPC security group"
+    name: "{{ ec2_group }}"
+    description: "{{ ec2_group }} VPC security group"
     rules:
       - proto: tcp
-        ports:
-          - 22
-          - 80
-          - 443
-          - "{{ ec2_v2ray_port }}"
+        ports: "{{ ec2_tcp_ports }}"
         cidr_ip: 0.0.0.0/0
       - proto: udp
-        ports:
-          - 53
-          - 500
-          - 4500
+        ports: "{{ ec2_udp_ports }}"
         cidr_ip: 0.0.0.0/0
       - proto: icmp
         from_port: 8
@@ -28,8 +21,8 @@
 
 - name: Ensure ec2 key pair
   ec2_key:
-    name: "{{ key_name }}"
-    key_material: "{{ lookup(key_public_uri_type, key_public_uri) }}"
+    name: "{{ ec2_key_name }}"
+    key_material: "{{ lookup(ec2_key_public_uri_type, ec2_key_public_uri) }}"
     state: present
     wait: true
 
@@ -39,25 +32,25 @@
 
 - name: Launch ec2 instance
   ec2:
-    key_name: "{{ key_name }}"
-    instance_type: "{{ instance_type }}"
-    image: "{{ ami_id }}"
+    key_name: "{{ ec2_key_name }}"
+    instance_type: "{{ ec2_instance_type }}"
+    image: "{{ ec2_ami_id }}"
     assign_public_ip: yes
-    group: default
+    group: "{{ ec2_group }}"
     vpc_subnet_id: "{{ subnet_facts.subnets[0].id }}"
     volumes:
-      - device_name: "{{ ami_volume_device }}"
+      - device_name: "{{ ec2_instance_volume_device }}"
         volume_type: gp2
-        volume_size: 10
+        volume_size: "{{ ec2_instance_volume_size }}"
         delete_on_termination: true
     user_data: "{{ lookup('template', 'user-data.j2') }}"
-    wait: "{{ wait_ec2_instance }}"
+    wait: "{{ ec2_wait_instance }}"
   register: ec2
 
 - name: Display instance public dns
   debug:
     msg: "Instance is {{ ec2.instances[0].state }} at {{ ec2.instances[0].public_dns_name }} with IP {{ ec2.instances[0].public_ip }}"
   when:
-    - echo_ec2_ip
+    - ec2_echo_ip
     - ec2 is defined
     - ec2.instances[0] is defined
