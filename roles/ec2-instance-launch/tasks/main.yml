@@ -38,6 +38,7 @@
     assign_public_ip: yes
     group: "{{ ec2_group }}"
     vpc_subnet_id: "{{ subnet_facts.subnets[0].id }}"
+    instance_profile_name: "{{ ec2_instance_profile | default(omit) }}"
     volumes:
       - device_name: "{{ ec2_instance_volume_device }}"
         volume_type: gp2
