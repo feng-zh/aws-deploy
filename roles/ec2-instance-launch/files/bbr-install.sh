@@ -28,3 +28,4 @@ check_kernel_version
 if [ $? -eq 0 ]; then
 	sysctl_config
 fi
+true
