@@ -44,7 +44,7 @@ users:
   - name: {{ cloud_user }}
     homedir: {{ cloud_home }}
     lock_passwd: true
-    gecos: Clould User
+    gecos: Cloud User
     groups: [wheel, adm, systemd-journal]
     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
     ssh_authorized_keys:
