@@ -1,0 +1,17 @@
+on: repository_dispatch
+name: on dispatch
+jobs:
+  ansible-vars:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: ansible-vars
+      uses: actions/bin/sh@master
+      env:
+        EXTRA_VARS: ${{ secrets.EXTRA_VARS }}
+      with:
+        args: .github/workflow/ansible_vars.sh
+    - name: ansible
+      uses: docker://williamyeh/ansible:alpine3
+      with:
+        args: sh -c "pip install boto; pip install boto3; ansible-playbook playbook.yml -e @.extra_vars"
