@@ -1,17 +1,20 @@
+name: deploy aws ec2
 on: repository_dispatch
-name: on dispatch
 jobs:
-  ansible-vars:
-    runs-on: ubuntu-latest
+  ec2:
+    name: Deploy to AWS EC2
+    runs-on: ubuntu-18.04
     steps:
-    - uses: actions/checkout@master
-    - name: ansible-vars
-      uses: actions/bin/sh@master
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+    - name: prepare .extra_vars
       env:
         EXTRA_VARS: ${{ secrets.EXTRA_VARS }}
-      with:
-        args: .github/workflow/ansible_vars.sh
-    - name: ansible
-      uses: docker://williamyeh/ansible:alpine3
-      with:
-        args: sh -c "pip install boto; pip install boto3; ansible-playbook playbook.yml -e @.extra_vars"
+      run: .github/workflows/ansible_vars.sh
+    - name: install boto
+      run: pip install boto
+    - name: install boto3
+      run: pip install boto3
+    - name: run ansible
+      run: ansible-playbook playbook.yml -e @.extra_vars
