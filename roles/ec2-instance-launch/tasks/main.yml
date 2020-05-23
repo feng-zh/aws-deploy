@@ -8,16 +8,22 @@
       - proto: tcp
         ports: "{{ ec2_tcp_ports }}"
         cidr_ip: 0.0.0.0/0
+        cidr_ipv6: ::/0
       - proto: udp
         ports: "{{ ec2_udp_ports }}"
         cidr_ip: 0.0.0.0/0
+        cidr_ipv6: ::/0
       - proto: icmp
         from_port: 8
+        to_port: -1
+        cidr_ip: 0.0.0.0/0
+      - proto: 58
         to_port: -1
         cidr_ip: 0.0.0.0/0
     rules_egress:
       - proto: all
         cidr_ip: 0.0.0.0/0
+        cidr_ipv6: ::/0
 
 - name: Ensure ec2 key pair
   ec2_key:
